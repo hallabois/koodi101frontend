@@ -2,6 +2,8 @@
     import { onMount } from "svelte";
     import Line from "svelte-chartjs/src/Line.svelte";
 
+    const api_host = "http://koodi101backend.elias-eelinen.gmail.com.beta.tailscale.net:9000";
+
     let use_scuffed_smoothing = false;
     let smoothness = 5;
     let rangemin;
@@ -82,7 +84,7 @@
         };
     }
     async function fetchAccelData() {
-        dataPromise = await fetch("http://95.216.143.30:9000/api/acceleration");
+        dataPromise = await fetch(`${api_host}/api/acceleration`);
         console.log(dataPromise);
         dataJSON = await dataPromise.json();
         return dataJSON;
