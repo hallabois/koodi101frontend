@@ -5,7 +5,7 @@
     const backend_url = "https://koodi101backend.herokuapp.com";
 
     let use_scuffed_smoothing = false;
-    let smoothness = 5;
+    let smoothness = 2;
     let rangemin;
     let rangemax;
     let range_start;
