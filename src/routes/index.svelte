@@ -96,41 +96,42 @@
         fetchAccelData();
     } );
 </script>
+<main>
+    <div class="mainbox">
+    <h1 class="otsikko">Koodi-101 - Kurssiprojekti</h1>
+    <p class="teksti"> Elias, Eero, Joonas, Vinski</p>
+    <p class="teksti">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+    <p class="teksti">Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
 
-<h1 class="otsikko">Koodi-101 - Kurssiprojekti</h1>
-<p class="teksti"> Elias, Eero, Joonas, Vinski</p>
-<p class="teksti">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<p class="teksti">Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
+    {#await fetchAccelData()}
+        <p>Ladataan dataa...</p>
+    {:then data} 
+        {#if dataline}
 
-{#await fetchAccelData()}
-    <p>Ladataan dataa...</p>
-{:then data} 
-    {#if dataline}
-
-        <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
-            mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
-    <div class="graph">
-        <div>
-            <Line data={dataline} options={{
-                animation: false,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Kiihtyvyys'
+            <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
+                mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
+        <div class="graph">
+            <div>
+                <Line data={dataline} options={{
+                    animation: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Kiihtyvyys'
+                        }
                     }
-                }
-            }} />
+                }} />
+            </div>
+            <label for="smoothness">Käyrän tarkkuus</label>
+            <input id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
+            <input id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />|
+            <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
+            <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
+            <label for="rangestart">Aikavälin alku</label>
+            <input id="smoothness" bind:value={range_start} type="range" min={rangemin} max={Math.min(rangemax, range_end)} />|
+            <label for="rangestart">Aikavälin loppu</label>
+            <input id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} />|
         </div>
-        <label for="smoothness">Käyrän tarkkuus</label>
-        <input id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
-        <input id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />|
-        <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
-        <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
-        <label for="rangestart">Aikavälin alku</label>
-        <input id="smoothness" bind:value={range_start} type="range" min={rangemin} max={Math.min(rangemax, range_end)} />|
-        <label for="rangestart">Aikavälin loppu</label>
-        <input id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} />|
-
         {#if data.results}
         <details>
             <summary>Raw data</summary>
@@ -138,12 +139,15 @@
                 {JSON.stringify(result)}
             {/each}
         </details>
-    {/if}
-    </div>
+        {/if}
     {/if}
 {/await}
+</main>
 
 <style>
+    main,:global(body,main) {
+        background-color: #333;
+    }
     .graph {
         max-width: 66%;
         margin: 0 auto;
@@ -158,7 +162,15 @@
         text-align: center;
     }
 
+    .mainbox {
+        background-color: #1e2f3e;
+        margin: 3em;
+        padding: 0.8em;
+        border-radius: 20px;
+    }
+
     * {
+        color: white ;
         font-family: 'Segoe UI', Tahoma, -apple-system, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, Verdana, sans-serif;
     }
 </style>
