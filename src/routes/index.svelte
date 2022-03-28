@@ -111,7 +111,7 @@
             <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
                 mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
         <div class="graph">
-            <div>
+            <div class="graphdata">
                 <Line data={dataline} options={{
                     animation: false,
                     plugins: {
@@ -122,21 +122,24 @@
                     }
                 }} />
             </div>
-            <label for="smoothness">Käyrän tarkkuus</label>
-            <input id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
-            <input id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />|
-            <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
-            <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
-            <label for="rangestart">Aikavälin alku</label>
-            <input id="smoothness" bind:value={range_start} type="range" min={rangemin} max={Math.min(rangemax, range_end)} />|
-            <label for="rangestart">Aikavälin loppu</label>
-            <input id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} />|
+            <div class="control">
+                <label class="flex" for="smoothness">Käyrän tarkkuus</label>
+                <input class="flex" id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
+                <input class="flex" id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />|
+                <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
+                <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
+                <label class="flex" for="rangestart">Aikavälin alku</label>
+                <input class="flex" id="smoothness" bind:value={range_start} type="range" min={rangemin} max={Math.min(rangemax, range_end)} />|
+                <label class="flex" for="rangestart">Aikavälin loppu</label>
+                <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} />|
+            </div>
         </div>
         {#if data.results}
         <details>
             <summary>Raw data</summary>
             {#each data.results as result}
                 {JSON.stringify(result)}
+                <br />
             {/each}
         </details>
         {/if}
@@ -147,10 +150,18 @@
 <style>
     main,:global(body,main) {
         background-color: #333;
+        margin:0;
     }
     .graph {
         max-width: 66%;
         margin: 0 auto;
+        background: #ececec;
+        padding: 1em 3em;
+        border-radius: 0.3em;
+    }
+
+    .graphdata {
+        padding: 1em;
     }
 
     .otsikko {
@@ -164,10 +175,24 @@
 
     .mainbox {
         background-color: #1e2f3e;
-        margin: 3em;
+        margin: 1em;
         padding: 0.8em;
         border-radius: 20px;
     }
+
+    label {
+        color: black;
+        margin: 0em 1em 0;
+    }
+
+    .control {
+        flex: auto;
+    }
+
+    .flex {
+        display: flex;
+    }
+
 
     * {
         color: white ;
