@@ -97,16 +97,17 @@
     } );
 </script>
 
-<h1>Dataa dataa jesjes</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-<p>Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
+<h1 class="otsikko">Koodi-101 - Kurssiprojekti</h1>
+<p class="teksti"> Elias, Eero, Joonas, Vinski</p>
+<p class="teksti">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<p class="teksti">Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
 
 {#await fetchAccelData()}
     <p>Ladataan dataa...</p>
 {:then data} 
     {#if dataline}
 
-        <p>Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
+        <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
             mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
         <div class="graph">
             <Line data={dataline} options={{
@@ -144,4 +145,14 @@
         max-width: 66%;
         margin: 0 auto;
     }
+
+    .otsikko {
+        font-size: 3.5em;
+        text-align: center;
+    }
+
+    .teksti {
+        text-align: center;
+    }
+
 </style>
