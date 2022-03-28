@@ -109,7 +109,8 @@
 
         <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
             mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
-        <div class="graph">
+    <div class="graph">
+        <div>
             <Line data={dataline} options={{
                 animation: false,
                 plugins: {
@@ -123,20 +124,22 @@
         <label for="smoothness">Käyrän tarkkuus</label>
         <input id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
         <input id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />|
-        <label for="smoothingalgo">Käytä rikkinäistä juttua</label>
-        <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />|
+        <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
+        <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
         <label for="rangestart">Aikavälin alku</label>
         <input id="smoothness" bind:value={range_start} type="range" min={rangemin} max={Math.min(rangemax, range_end)} />|
         <label for="rangestart">Aikavälin loppu</label>
         <input id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} />|
-    {/if}
-    {#if data.results}
+
+        {#if data.results}
         <details>
             <summary>Raw data</summary>
             {#each data.results as result}
                 {JSON.stringify(result)}
             {/each}
         </details>
+    {/if}
+    </div>
     {/if}
 {/await}
 
@@ -155,4 +158,7 @@
         text-align: center;
     }
 
+    * {
+        font-family: 'Segoe UI', Tahoma, -apple-system, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, Verdana, sans-serif;
+    }
 </style>
