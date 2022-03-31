@@ -41,7 +41,7 @@
         let max = Math.max(...mapped);
         return [min, max];
     }
-    function updateStuff() {
+    $: if( smoothness != null && range_start_offset != null && dataJSON ) {
         let ogData = dataJSON.results;
         [rangemin, rangemax] = getRangeMinMax(ogData);
         range_end = rangemax;
@@ -84,37 +84,47 @@
             datasets: datasets
         };
     }
-    $: if( smoothness != null && range_start_offset != null && dataJSON ) {
-        updateStuff();
-    }
     async function fetchAccelData() {
         dataPromise = await fetch(`${backend_url}/api/acceleration`);
         console.log(dataPromise);
         dataJSON = await dataPromise.json();
-        updateStuff();
         return dataJSON;
     }
     let dataJSON;
     let dataline;
     let dataPromise;
+
+    async function fetchTemps() {
+        tempPromise = await fetch (`${backend_url}/api/temperature`);
+        console.log(tempPromise);
+        tempJSON = await tempPromise.json();
+        return tempJSON;
+    }
+    let tempPromise;
+    let tempJSON;
+
     onMount(async () => {
         fetchAccelData();
+        fetchTemps();
         setInterval(()=>{
             console.log("refreshing...");
             fetchAccelData();
-        }, 2000 );
+            fetchTemps();
+        }, 10000 );
     } );
+
 </script>
 <main>
     <div class="mainbox">
     <h1 class="otsikko">Koodi-101 - Kurssiprojekti</h1>
     <p class="teksti"> Elias, Eero, Joonas, Vinski</p>
-    <p class="teksti">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-    <p class="teksti">Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
 
+    {#if tempJSON}
+        <p class="teksti spacialbs">Viimeisin lämpötila: {tempJSON.results.reduce((best,x)=>x.createdAt < best ? x : best).temp}℃</p>
+    {/if}
     {#if dataJSON}
         {#if dataline}
-
+            <p class="teksti spacialbs">Kiihtyvyys:</p>
             <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
                 mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
             <div class="graph">
@@ -141,10 +151,15 @@
                     <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} /> -->
                 </div>
             </div>
-            {#if dataJSON.results}
+            {#if dataJSON.results && tempJSON.results}
                 <details>
                     <summary>Raw data</summary>
                     {#each dataJSON.results as result}
+                        {JSON.stringify(result)}
+                        <br />
+                    {/each}
+
+                    {#each tempJSON.results as result}
                         {JSON.stringify(result)}
                         <br />
                     {/each}
@@ -206,6 +221,11 @@
 
     .flex {
         display: flex;
+    }
+
+    .spacialbs {
+        font-size: 2.8em;
+        font-family: serif;
     }
 
 
