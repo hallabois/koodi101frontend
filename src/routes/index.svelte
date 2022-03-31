@@ -95,11 +95,24 @@
     let dataJSON;
     let dataline;
     let dataPromise;
+
+    async function fetchTemps() {
+        tempPromise = await fetch (`${backend_url}/api/temperature`);
+        console.log(tempPromise);
+        tempJSON = await tempPromise.json();
+        refresher = new Date();
+        return tempJSON;
+    }
+    let tempPromise;
+    let tempJSON;
+
     onMount(async () => {
         fetchAccelData();
+        fetchTemps();
         setInterval(()=>{
             console.log("refreshing...");
             fetchAccelData();
+            fetchTemps();
         }, 2000 );
     } );
 </script>
@@ -109,6 +122,8 @@
     <p class="teksti"> Elias, Eero, Joonas, Vinski</p>
     <p class="teksti">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
     <p class="teksti">Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
+
+    <p class="teksti spacialbs">Lämpötila on: (pls tee tää ennen demoa)°C</p>
 
     {#if dataJSON} 
         {#if dataline}
@@ -143,6 +158,11 @@
             <details>
                 <summary>Raw data</summary>
                 {#each dataJSON.results as result}
+                    {JSON.stringify(result)}
+                    <br />
+                {/each}
+
+                {#each tempJSON.results as result}
                     {JSON.stringify(result)}
                     <br />
                 {/each}
@@ -204,6 +224,11 @@
 
     .flex {
         display: flex;
+    }
+
+    .spacialbs {
+        font-size: 3.8em;
+        font-family: serif;
     }
 
 
