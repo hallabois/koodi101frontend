@@ -5,10 +5,11 @@
     const backend_url = "https://koodi101backend.herokuapp.com";
 
     let use_scuffed_smoothing = false;
-    let smoothness = 2;
+    let smoothness = 1;
     let rangemin;
     let rangemax;
     let range_start;
+    let range_start_offset = 5 * 60 * 1000;
     let range_end;
     function averageDataPoints(o1, o2) {
         return {
@@ -40,11 +41,12 @@
         let max = Math.max(...mapped);
         return [min, max];
     }
-    $: if(dataJSON && smoothness) {
+    let refresher = new Date();
+    $: if(refresher && smoothness && range_start_offset && dataJSON) {
         let ogData = dataJSON.results;
         [rangemin, rangemax] = getRangeMinMax(ogData);
-        range_start = range_start || rangemin;
         range_end = range_end || rangemax;
+        range_start = range_end - range_start_offset || rangemin;
         let filteredData = ogData.filter( (o)=>new Date(o.createdAt).getTime()>=range_start && new Date(o.createdAt).getTime()<=range_end );
         if(smoothness != 0){ // Modulo might not like 0
             if(use_scuffed_smoothing){
@@ -87,6 +89,7 @@
         dataPromise = await fetch(`${backend_url}/api/acceleration`);
         console.log(dataPromise);
         dataJSON = await dataPromise.json();
+        refresher = new Date();
         return dataJSON;
     }
     let dataJSON;
@@ -94,6 +97,10 @@
     let dataPromise;
     onMount(async () => {
         fetchAccelData();
+        setInterval(()=>{
+            console.log("refreshing...");
+            fetchAccelData();
+        }, 2000 );
     } );
 </script>
 <main>
@@ -103,15 +110,13 @@
     <p class="teksti">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
     <p class="teksti">Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
 
-    {#await fetchAccelData()}
-        <p>Ladataan dataa...</p>
-    {:then data} 
+    {#if dataJSON} 
         {#if dataline}
 
             <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
                 mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
-        <div class="graph">
-            <div class="graphdata">
+            <div class="graph">
+                <div class="graphdata">
                 <Line data={dataline} options={{
                     animation: false,
                     plugins: {
@@ -125,26 +130,28 @@
             <div class="control">
                 <label class="flex" for="smoothness">Käyrän tarkkuus</label>
                 <input class="flex" id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
-                <input class="flex" id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />|
+                <input class="flex" id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />
                 <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
                 <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
-                <label class="flex" for="rangestart">Aikavälin alku</label>
-                <input class="flex" id="smoothness" bind:value={range_start} type="range" min={rangemin} max={Math.min(rangemax, range_end)} />|
-                <label class="flex" for="rangestart">Aikavälin loppu</label>
-                <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} />|
+                <label class="flex" for="rangestart">Aikaväli</label> {new Date(range_start_offset)}
+                <input class="flex" id="smoothness" bind:value={range_start_offset} type="range" min={0} max={rangemax-rangemin} />
+                <!-- <label class="flex" for="rangestart">Aikavälin loppu</label>
+                <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} /> -->
             </div>
         </div>
-        {#if data.results}
-        <details>
-            <summary>Raw data</summary>
-            {#each data.results as result}
-                {JSON.stringify(result)}
-                <br />
-            {/each}
-        </details>
+        {#if dataJSON.results}
+            <details>
+                <summary>Raw data</summary>
+                {#each dataJSON.results as result}
+                    {JSON.stringify(result)}
+                    <br />
+                {/each}
+            </details>
         {/if}
+    {:else}
+        <p>Ladataan data...</p>
     {/if}
-{/await}
+{/if}
 </main>
 
 <style>
@@ -153,6 +160,7 @@
         margin:0;
     }
     .graph {
+        color: black !important;
         max-width: 66%;
         margin: 0 auto;
         background: #ececec;
@@ -187,6 +195,11 @@
 
     .control {
         flex: auto;
+        color: black;
+    }
+
+    input {
+        color: black;
     }
 
     .flex {
