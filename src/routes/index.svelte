@@ -127,17 +127,17 @@
                         }
                     }} />
                 </div>
-            </div>
-            <div class="control">
-                <label class="flex" for="smoothness">Käyrän tarkkuus</label>
-                <input class="flex" id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
-                <input class="flex" id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />
-                <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
-                <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
-                <label class="flex" for="rangestart">Aikaväli</label> {new Date(range_start_offset)}
-                <input class="flex" id="smoothness" bind:value={range_start_offset} type="range" min={0} max={rangemax-rangemin} />
-                <!-- <label class="flex" for="rangestart">Aikavälin loppu</label>
-                <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} /> -->
+                <div class="control">
+                    <label class="flex" for="smoothness">Käyrän tarkkuus</label>
+                    <input class="flex" id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
+                    <input class="flex" id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />
+                    <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
+                    <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
+                    <label class="flex" for="rangestart">Aikaväli</label> {new Date(range_start_offset)}
+                    <input class="flex" id="smoothness" bind:value={range_start_offset} type="range" min={0} max={rangemax-rangemin} />
+                    <!-- <label class="flex" for="rangestart">Aikavälin loppu</label>
+                    <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} /> -->
+                </div>
             </div>
             {#if dataJSON.results}
                 <details>
