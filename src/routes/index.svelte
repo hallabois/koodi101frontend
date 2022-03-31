@@ -11,6 +11,7 @@
     let range_start;
     let range_start_offset = 5 * 60 * 1000;
     let range_end;
+    $: smoothness = Math.floor((range_start_offset / 60 / 1000) /10);
     function averageDataPoints(o1, o2) {
         return {
             ...o1,
