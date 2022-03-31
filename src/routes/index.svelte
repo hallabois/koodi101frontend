@@ -132,46 +132,46 @@
                 mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
             <div class="graph">
                 <div class="graphdata">
-                <Line data={dataline} options={{
-                    animation: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Kiihtyvyys'
+                    <Line data={dataline} options={{
+                        animation: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Kiihtyvyys'
+                            }
                         }
-                    }
-                }} />
+                    }} />
+                </div>
+                <div class="control">
+                    <label class="flex" for="smoothness">Käyrän tarkkuus</label>
+                    <input class="flex" id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
+                    <input class="flex" id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />
+                    <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
+                    <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
+                    <label class="flex" for="rangestart">Aikaväli</label> {range_start_offset / 60 / 1000} min
+                    <input class="flex" id="smoothness" bind:value={range_start_offset} type="range" min={0} max={rangemax-rangemin} />
+                    <!-- <label class="flex" for="rangestart">Aikavälin loppu</label>
+                    <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} /> -->
+                </div>
             </div>
-            <div class="control">
-                <label class="flex" for="smoothness">Käyrän tarkkuus</label>
-                <input class="flex" id="smoothness" bind:value={smoothness} type="range" min=1 max=100 />
-                <input class="flex" id="smoothness" bind:value={smoothness} type="number" min=1 max=100 />
-                <!-- <label for="smoothingalgo">Käytä rikkinäistä juttua</label> -->
-                <!-- <input id="smoothness" bind:checked={use_scuffed_smoothing} type="checkbox" />| -->
-                <label class="flex" for="rangestart">Aikaväli</label> {new Date(range_start_offset)}
-                <input class="flex" id="smoothness" bind:value={range_start_offset} type="range" min={0} max={rangemax-rangemin} />
-                <!-- <label class="flex" for="rangestart">Aikavälin loppu</label>
-                <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} /> -->
-            </div>
-        </div>
-        {#if dataJSON.results}
-            <details>
-                <summary>Raw data</summary>
-                {#each dataJSON.results as result}
-                    {JSON.stringify(result)}
-                    <br />
-                {/each}
+            {#if dataJSON.results}
+                <details>
+                    <summary>Raw data</summary>
+                    {#each dataJSON.results as result}
+                        {JSON.stringify(result)}
+                        <br />
+                    {/each}
 
-                {#each tempJSON.results as result}
-                    {JSON.stringify(result)}
-                    <br />
-                {/each}
-            </details>
+                    {#each tempJSON.results as result}
+                        {JSON.stringify(result)}
+                        <br />
+                    {/each}
+                </details>
+            {/if}
         {/if}
     {:else}
-        <p>Ladataan data...</p>
+        <p>Ladataan dataa...</p>
     {/if}
-{/if}
 </main>
 
 <style>
