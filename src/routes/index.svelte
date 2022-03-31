@@ -41,11 +41,10 @@
         let max = Math.max(...mapped);
         return [min, max];
     }
-    let refresher = new Date();
-    $: if(refresher && smoothness && range_start_offset && dataJSON) {
+    function updateStuff() {
         let ogData = dataJSON.results;
         [rangemin, rangemax] = getRangeMinMax(ogData);
-        range_end = range_end || rangemax;
+        range_end = rangemax;
         range_start = range_end - range_start_offset || rangemin;
         let filteredData = ogData.filter( (o)=>new Date(o.createdAt).getTime()>=range_start && new Date(o.createdAt).getTime()<=range_end );
         if(smoothness != 0){ // Modulo might not like 0
@@ -85,11 +84,14 @@
             datasets: datasets
         };
     }
+    $: if( smoothness != null && range_start_offset != null && dataJSON ) {
+        updateStuff();
+    }
     async function fetchAccelData() {
         dataPromise = await fetch(`${backend_url}/api/acceleration`);
         console.log(dataPromise);
         dataJSON = await dataPromise.json();
-        refresher = new Date();
+        updateStuff();
         return dataJSON;
     }
     let dataJSON;
@@ -110,7 +112,7 @@
     <p class="teksti">Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
     <p class="teksti">Käyttää kans <a href="https://www.chartjs.org/docs/latest/" target="_blank">charts.js</a>:sää</p>
 
-    {#if dataJSON} 
+    {#if dataJSON}
         {#if dataline}
 
             <p class="teksti">Original data was from {new Date(rangemin).toLocaleString()} to {new Date(rangemax).toLocaleString()}, 
