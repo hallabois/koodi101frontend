@@ -117,15 +117,16 @@
                 mapped to <b>{new Date(range_start).toLocaleString()} – {new Date(range_end).toLocaleString()}</b></p>
             <div class="graph">
                 <div class="graphdata">
-                <Line data={dataline} options={{
-                    animation: false,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Kiihtyvyys'
+                    <Line data={dataline} options={{
+                        animation: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Kiihtyvyys'
+                            }
                         }
-                    }
-                }} />
+                    }} />
+                </div>
             </div>
             <div class="control">
                 <label class="flex" for="smoothness">Käyrän tarkkuus</label>
@@ -138,20 +139,19 @@
                 <!-- <label class="flex" for="rangestart">Aikavälin loppu</label>
                 <input class="flex" id="smoothness" bind:value={range_end} type="range" min={Math.max(rangemin, range_start)} max={rangemax} /> -->
             </div>
-        </div>
-        {#if dataJSON.results}
-            <details>
-                <summary>Raw data</summary>
-                {#each dataJSON.results as result}
-                    {JSON.stringify(result)}
-                    <br />
-                {/each}
-            </details>
+            {#if dataJSON.results}
+                <details>
+                    <summary>Raw data</summary>
+                    {#each dataJSON.results as result}
+                        {JSON.stringify(result)}
+                        <br />
+                    {/each}
+                </details>
+            {/if}
         {/if}
     {:else}
-        <p>Ladataan data...</p>
+        <p>Ladataan dataa...</p>
     {/if}
-{/if}
 </main>
 
 <style>
