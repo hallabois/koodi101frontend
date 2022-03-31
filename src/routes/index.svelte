@@ -55,7 +55,7 @@
                 filteredData = smoothData(filteredData, smoothness).filter( (_o, i)=>i%smoothness==0 );
             }
         }
-        let labels = filteredData.map( o=>o.id );
+        let labels = filteredData.map( o=>new Date(o.createdAt).toLocaleTimeString() );
         let datax = filteredData.map( o=>o.x );
         let datay = filteredData.map( o=>o.y );
         let dataz = filteredData.map( o=>o.z );
